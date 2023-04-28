@@ -1,8 +1,10 @@
 // Change character in a cell
 
 // amend input parameters here:
+
 const requieredRange = "B1:B27";
 const characterToRemove = "3"
+
 // ----------------------------
 
 
