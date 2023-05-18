@@ -12,10 +12,8 @@ function main(workbook: ExcelScript.Workbook) {
     };
 
     // Code to run    
-
     // important to run list consistency check before moving rows
 
-    let rangeToMove = sourceSheet.getRange(`${RANGE.columnStart}${RANGE.rowStart}:${RANGE.columnFinish}${RANGE.rowStart}`);
      let result = workbook.addWorksheet();
      result.setName(NEW_SHEET_NAME);
 
