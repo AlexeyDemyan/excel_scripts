@@ -19,10 +19,6 @@ function main(workbook: ExcelScript.Workbook) {
      let result = workbook.addWorksheet();
      result.setName(NEW_SHEET_NAME);
 
-    const resultRange = result.getRange(`${RANGE.columnStart}${RANGE.rowStart}:${RANGE.columnFinish}${RANGE.rowStart}`);
-
-     resultRange.setValues(rangeToMove.getValues());
-
     let sourceTotalRange = sourceSheet.getRange(`${RANGE.columnStart}${RANGE.rowStart}:${RANGE.columnStart}${RANGE.rowFinish}`)
 
     for (let i = 0; i < sourceTotalRange.getCellCount(); i++) {  
