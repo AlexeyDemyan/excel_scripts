@@ -21,21 +21,22 @@ function main(workbook: ExcelScript.Workbook) {
   
     let sourceTotalRange = sourceSheet.getRange(`${RANGE.columnStart}${RANGE.rowStart}:${RANGE.columnStart}${RANGE.rowFinish}`)
   
-    let counter = 0;
-    ORDERED_LIST.forEach(element => {
-      for (let i = 0; i < sourceTotalRange.getCellCount(); i++) {
-        let currentCell = sourceTotalRange.getCell(i, 0);
-        let currentCellText = currentCell.getText();
-        if (currentCellText === element) {
-          let rangeToMove = `${RANGE.columnStart}${currentCell.getRowIndex() + 1}:${RANGE.columnFinish}${currentCell.getRowIndex() + 1}`;
-          let sourceRange = sourceSheet.getRange(rangeToMove);
-          let resultRange = result.getRange(`${RANGE.columnStart}${RANGE.rowStart + counter}:${RANGE.columnFinish}${RANGE.rowStart + counter}`);
-          resultRange.setValues(sourceRange.getValues());
-          counter++;
-        }
-        
+    let currentItemNumber = '';
+      let counter = 0;
+      for (let i = 0; i < RANGE.rowFinish; i++) {
+        let currentCellText = sourceTotalRange.getCell(i, 0).getText();
+        if (ORDERED_LIST.includes(currentCellText)) {
+      if (currentCellText !== currentItemNumber) {
+        currentItemNumber = currentCellText;
+        counter++
       }
-    })
+      let rangeToMove = `${RANGE.columnStart}${i + 1}:${RANGE.columnFinish}${i + 1}`;
+      let sourceRange = sourceSheet.getRange(rangeToMove);
+      let resultRange = result.getRange(`${RANGE.columnStart}${RANGE.rowStart + counter}:${RANGE.columnFinish}${RANGE.rowStart + counter}`);
+        resultRange.setValues(sourceRange.getValues());
+        counter++;
+    }
+  }
   
     console.log('Done !')
   }
