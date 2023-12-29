@@ -76,7 +76,7 @@ function main(workbook: ExcelScript.Workbook) {
 
                     let absoluteDifference = Math.abs(Number(currentAmount) - Number(itemAmount));
 
-                    if (itemAmount === "") {
+                    if (currentAmount === "") {
                         break;
                     }
 
