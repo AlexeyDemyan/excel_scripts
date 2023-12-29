@@ -68,6 +68,10 @@ function main(workbook: ExcelScript.Workbook) {
 
         if (currentItem !== "") {
             console.log(`Checking item ${currentItem}`)
+            if (currentAmount === "") {
+                continue;
+            }
+
             for (let j = 0; j < 7000; j++) {
                 let itemToCheck = currentTotalRange.getCell(j, 0).getText();
                 if (itemToCheck === currentItem) {
@@ -75,10 +79,6 @@ function main(workbook: ExcelScript.Workbook) {
                     let itemAmount = currentTotalRange.getCell(j, 5).getText();
 
                     let absoluteDifference = Math.abs(Number(currentAmount) - Number(itemAmount));
-
-                    if (currentAmount === "") {
-                        break;
-                    }
 
                     if (Number(currentAmount) > Number(itemAmount)) {
                         materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 2).setValue(itemToCheck);
