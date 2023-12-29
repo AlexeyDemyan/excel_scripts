@@ -76,9 +76,6 @@ function main(workbook: ExcelScript.Workbook) {
 
                     let absoluteDifference = Math.abs(Number(currentAmount) - Number(itemAmount));
 
-                    console.log(itemUOM);
-                    console.log(itemAmount)
-
                     if (itemAmount === "") {
                         break;
                     }
@@ -94,7 +91,7 @@ function main(workbook: ExcelScript.Workbook) {
                         materialReceiptLineCounter++
                     }
 
-                    if (Number(currentAmount) > Number(itemAmount)) {
+                    if (Number(currentAmount) < Number(itemAmount)) {
                         materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 2).setValue(itemToCheck);
                         materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 3).setValue(absoluteDifference);
                         materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 4).setValue(absoluteDifference);
