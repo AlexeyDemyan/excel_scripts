@@ -52,6 +52,8 @@ function main(workbook: ExcelScript.Workbook) {
                 };
             if([5,10,15].includes(j)) {
                 totalRange.getCell(lineNumber,0).setValue('RELEASE:')
+                // Needed to force cell data type to Date by doing this:
+                // totalRange.getCell(lineNumber, 1).setValue('02/05/2024')
                 totalRange.getCell(lineNumber, 1).setValue(SETTINGS.release)
                 };
 
