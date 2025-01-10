@@ -40,6 +40,7 @@ function main(workbook: ExcelScript.Workbook) {
     let partyList: String[] = [];
 
     for (let i = 0; i < RANGE.rowFinish; i++) {
+        console.log(`checking ${i}`);
         if (currentTotalRange.getCell(i, 0).getText() === "") {
             console.log(`Script completed at ${i} iterations`);
             break;
@@ -55,14 +56,16 @@ function main(workbook: ExcelScript.Workbook) {
             partyList.push(currentParty);
         } else {
             if (partyList.includes(currentParty)) {
+                if (resultSheetTotalRange.getCell(resultLineCount - 1, 0).getValue() !== currentBillNo) {
+                    resultLineCount++;
+                }
+
                 if (resultSheetTotalRange.getCell(resultLineCount - 1, 1).getValue() !== possibleDuplicateInvoiceNo) {   
                 resultSheetTotalRange.getCell(resultLineCount, 0).setValue(currentBillNo);
                 resultSheetTotalRange.getCell(resultLineCount, 1).setValue(possibleDuplicateInvoiceNo);
                 resultSheetTotalRange.getCell(resultLineCount, 2).setValue(currentParty);
                 resultLineCount++;
                 }
-                console.log(possibleDuplicateInvoiceNo);
-                console.log(currentInvoiceNo);
                 resultSheetTotalRange.getCell(resultLineCount, 0).setValue(currentBillNo);
                 resultSheetTotalRange.getCell(resultLineCount, 1).setValue(currentInvoiceNo);
                 resultSheetTotalRange.getCell(resultLineCount, 2).setValue(currentParty);
