@@ -19,7 +19,7 @@ function main(workbook: ExcelScript.Workbook) {
     const ACCOUNT_TYPE = 'Ledger';
     const LEDGER_DIMENSION_DEBIT = '999101';
     const LEDGER_DIMENSION_CREDIT = '999006';
-    const SEQUENCE_NAME = 'MRMUPLD';
+    const SEQUENCE_NAME = 'MRM';
     const SEQUENCE_DIGIT_COUNT = 3;
 
     // Code to run 
@@ -59,7 +59,8 @@ function main(workbook: ExcelScript.Workbook) {
     moveColumn('F', 'H');
 
     const currentTime = new Date();
-    const currentYear = (currentTime.getFullYear().toString());
+    // const currentYear = (currentTime.getFullYear().toString());
+    const currentYear = (currentTime.getFullYear().toString().slice(-2));
     const currentMonth = ((currentTime.getMonth() + 1).toString().padStart(2, '0'));
     const currentDate = (currentTime.getDate().toString().padStart(2, '0'));
 
