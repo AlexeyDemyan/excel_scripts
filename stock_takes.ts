@@ -8,15 +8,15 @@ function main(workbook: ExcelScript.Workbook) {
 
     const RANGE = {
         columnStart: 'A',
-        columnFinish: 'Z',
+        columnFinish: 'E',
         rowStart: 1,
-        rowFinish: 450,
+        rowFinish: 10000,
     };
 
     const HEADERS = ["Stock Entry Type", "Company", "Item Code (Items)", "Qty (Items)", "Qty as per Stock UOM (Items)", "UOM (Items)", "Stock UOM (Items)", "Conversion Factor (Items)", "Source Warehouse (Items)"];
 
     const COMPANY = 'Marsovin Winery Ltd (B&V)';
-    const DEFAULT_WAREHOUSE = 'FG (Winery) - M'
+    const DEFAULT_WAREHOUSE = 'RM (PET) - M'
 
     // Code to run 
 
@@ -46,6 +46,9 @@ function main(workbook: ExcelScript.Workbook) {
     for (let i = 0; i < HEADERS.length; i++) {
         materialReceiptSheetTotalRange.getCell(0, i).setValue(HEADERS[i]);
         materialIssueSheetTotalRange.getCell(0, i).setValue(HEADERS[i]);
+        if (i === 8) {
+            materialReceiptSheetTotalRange.getCell(0, i).setValue("Target Warehouse (Items)");
+        }
     };
 
     materialReceiptSheetTotalRange.getCell(1, 0).setValue(MATERIAL_RECEIPT);
@@ -61,50 +64,38 @@ function main(workbook: ExcelScript.Workbook) {
 
     for (let i = 0; i < RANGE.rowFinish; i++) {
         if (currentTotalRange.getCell(i, 0).getText() === "") {
-            continue
+            console.log("Finished!")
+            break;
         }
-        let currentItem = currentTotalRange.getCell(i, 24).getText();
-        let currentAmount = currentTotalRange.getCell(i, 25).getText();
+        let currentItem = currentTotalRange.getCell(i, 0).getText();
+        let currentAmount = currentTotalRange.getCell(i, 4).getText();
 
-        if (currentItem !== "") {
-            console.log(`Checking item ${currentItem}`)
-            if (currentAmount === "") {
-                continue;
-            }
+        console.log(`Checking item ${currentItem}`)
+        let itemUOM = currentTotalRange.getCell(i, 2).getText();
+        let itemAmount = currentTotalRange.getCell(i, 3).getText();
 
-            for (let j = 0; j < 7000; j++) {
-                let itemToCheck = currentTotalRange.getCell(j, 0).getText();
-                if (itemToCheck === currentItem) {
-                    let itemUOM = currentTotalRange.getCell(j, 4).getText();
-                    let itemAmount = currentTotalRange.getCell(j, 5).getText();
+        let absoluteDifference = Math.abs(Number(currentAmount) - Number(itemAmount));
 
-                    let absoluteDifference = Math.abs(Number(currentAmount) - Number(itemAmount));
+        if (Number(currentAmount) > Number(itemAmount)) {
+            materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 2).setValue(currentItem);
+            materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 3).setValue(absoluteDifference);
+            materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 4).setValue(absoluteDifference);
+            materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 5).setValue(itemUOM);
+            materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 6).setValue(itemUOM);
+            materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 7).setValue(1);
+            materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 8).setValue(DEFAULT_WAREHOUSE);
+            materialReceiptLineCounter++
+        }
 
-                    if (Number(currentAmount) > Number(itemAmount)) {
-                        materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 2).setValue(itemToCheck);
-                        materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 3).setValue(absoluteDifference);
-                        materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 4).setValue(absoluteDifference);
-                        materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 5).setValue(itemUOM);
-                        materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 6).setValue(itemUOM);
-                        materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 7).setValue(1);
-                        materialReceiptSheetTotalRange.getCell(materialReceiptLineCounter, 8).setValue(DEFAULT_WAREHOUSE);
-                        materialReceiptLineCounter++
-                    }
-
-                    if (Number(currentAmount) < Number(itemAmount)) {
-                        materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 2).setValue(itemToCheck);
-                        materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 3).setValue(absoluteDifference);
-                        materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 4).setValue(absoluteDifference);
-                        materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 5).setValue(itemUOM);
-                        materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 6).setValue(itemUOM);
-                        materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 7).setValue(1);
-                        materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 8).setValue(DEFAULT_WAREHOUSE);
-                        materialIssueLineCounter++
-                    }
-
-                    break
-                }
-            }
+        if (Number(currentAmount) < Number(itemAmount)) {
+            materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 2).setValue(currentItem);
+            materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 3).setValue(absoluteDifference);
+            materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 4).setValue(absoluteDifference);
+            materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 5).setValue(itemUOM);
+            materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 6).setValue(itemUOM);
+            materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 7).setValue(1);
+            materialIssueSheetTotalRange.getCell(materialIssueLineCounter, 8).setValue(DEFAULT_WAREHOUSE);
+            materialIssueLineCounter++
         }
     }
 
